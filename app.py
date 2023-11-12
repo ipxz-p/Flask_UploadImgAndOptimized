@@ -29,7 +29,6 @@ def upload_file():
         if file:
             # Determine the file type based on the extension
             file_extension = file.filename.split('.')[-1].lower()
-
             # Generate a unique filename for the file
             filename = f"{str(uuid.uuid4())}.{file_extension}"
             # Determine the content type based on the file extension
@@ -51,7 +50,12 @@ def upload_file():
                 storage.child("uploads/" + filename).put(pdf_contents, content_type=content_type)
             else:
                 return "Unsupported file type."
-            return "File uploaded and optimized successfully!"
+
+            # Construct the link based on the filename
+            file_link = storage.child("uploads/" + filename).get_url(None)
+
+            # Return the success message along with the link
+            return file_link
     return "No file uploaded."
 
 @app.route('/images/<image_filename>')
